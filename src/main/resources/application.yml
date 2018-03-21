@@ -1,0 +1,37 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    username: root
+    password: root
+    url: jdbc:mysql://localhost:3306/zhiping?useUnicode=true&characterEncoding=utf-8&serverTimezone=UTC
+  jpa:
+    show-sql: true
+#    hibernate:
+#      naming:
+#        implicit-strategy: com.example.demo.config.RoncooNameing
+
+  mvc:
+    view:
+      suffix: html
+      prefix: classpath:/templates/
+  thymeleaf:
+    mode: LEGACYHTML5 #关闭标签闭合检测
+    cache: false
+
+
+#  activemq:
+#    broker-url: tcp://localhost:61616
+#  redis:
+  #    host: 127.0.0.1
+  #    port: 6379
+#      cluster:
+#        nodes:
+#          - 192.168.0.181:7001
+#          - 192.168.0.181:7002
+#          - 192.168.0.181:7003
+#          - 192.168.0.181:7004
+#          - 192.168.0.181:7005
+#          - 192.168.0.181:7006
+
+#server:
+#  context-path: /taotao/

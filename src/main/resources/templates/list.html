@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>列表</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/list.css">
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+</head>
+<body>
+<h1>欢迎你，<span style="color: red;margin-right: 40px ">XXX</span>今日访问量：33 总访问量：444</h1>
+<form action="" method="post" >
+    <div id="ww" >
+        部门名称：<select  style="height:30px">
+                    <option value="">--请选择--</option>
+                    <option value ="">研发部</option>
+                    <option value ="">人事部</option>
+                    <option value="">公关部</option>
+                 </select>
+        工资：<select  style="height:30px">
+                    <option value="">--请选择--</option>
+                    <option value ="">升序</option>
+                    <option value="">降序</option>
+            </select>
+        级别：<select style="height:30px">
+                    <option value ="">---请选择---</option>
+                    <option value ="">王者</option>
+                    <option value ="">黄金</option>
+                    <option value="">青铜</option>
+                    <option value="">白银</option>
+             </select>
+        性别：<select style="height:30px">
+                    <option value ="">---请选择---</option>
+                    <option value ="">男</option>
+                    <option value="">女</option>
+            </select>
+        爱好：<select style="height:30px">
+                    <option value ="">---请选择---</option>
+                    <option value="">这里动态查询出来</option>
+               </select>
+        部门地点：<select style="height:30px">
+                <option value ="">---请选择---</option>
+                <option value="">这里动态查询出来</option>
+             </select>
+      姓名：<input type="text" style="height:30px" placeholder="请输入关键字"  autocomplete="off"/>
+        <input type="submit" style="height:30px;" class="btn btn-info" value="查询">
+        <button type="button" style="height:30px;" class="btn btn-success">新增</button>
+        <button type="button"  style="height:30px;" class="btn btn-info">导入</button>
+        <button type="button"  style="height:30px;" class="btn btn-info">导出</button>
+        <button type="button" style="height:30px;"  class="btn btn-success">修改密码</button>
+        <button type="button"style="height:30px;" class="btn btn-success">退出</button>
+    </div>
+</form>
+
+
+<table class="table table-bordered" id="ss" >
+
+    <tr id="trflag">
+        <td>员工编号</td>
+        <td>员工头像</td>
+        <td>员工姓名</td>
+        <td>员工年龄</td>
+        <td>员工级别</td>
+        <td>员工性别</td>
+        <td>员工工资</td>
+        <td>员工爱好</td>
+        <td>部门名称</td>
+        <td>部门地点</td>
+        <td>操作</td>
+    </tr>
+    <tr>
+        <td>1</td>
+        <td>员工头像</td>
+        <td>搜索</td>
+        <td>32</td>
+        <td>王者</td>
+        <td>男</td>
+        <td>4543</td>
+        <td>计算机</td>
+        <td>人事部</td>
+        <td>北京</td>
+        <td>
+            <button type="button"  class="btn btn-info">查看</button>
+            <button type="button" class="btn btn-warning">修改</button>
+            <button type="button" class="btn btn-danger">删除</button>
+        </td>
+    </tr>
+
+        <tr>
+            <td colspan="13">
+                <form action="" method="post">
+                    共22页 &nbsp;&nbsp;1/22
+                    &nbsp;&nbsp;每页显示3条数据 &nbsp;&nbsp;共66条数量&nbsp;&nbsp;
+                    <a href="">首页</a>
+                    <a href="">上一页</a>
+                    <a href="">下一页</a>
+                    <a href="">尾页</a>
+                    跳转到第<input type="text"  style="height:30px;" placeholder="请输入页数">页
+                    <input type="submit" class="btn btn-primary" style="height:30px; " value="跳转">
+                    每页显示： <select style="height:30px">
+                                    <option value="1">1</option>
+                                    <option value="3">3</option>
+                                    <option value="5">5</option>
+                                    <option value="9" >9</option>
+                              </select>
+                </form>
+            </td>
+        </tr>
+
+</table>
+</body>
+
+<script type="text/javascript">
+    $(function () {
+        $.post("/emp/list", function (data) {
+            if (data.status == 200) {
+
+                for (var i = 0; i < data.data.length; ++i) {
+                    var obj = data.data[i]
+
+                    var str = '<tr>\
+                                <td>' + obj.id + '</td>\
+                                <td>' + obj.portrait + '</td>\
+                                <td>' + obj.uname + '</td>\
+                                <td>' + obj.birthday + '</td>\
+                                <td>' + obj.level + '</td>\
+                                <td>' + obj.six + '</td>\
+                                <td>' + obj.wages + '</td>\
+                                <td>' + obj.hobby + '</td>\
+                                <td>' + obj.department.name + '</td>\
+                                <td>' + obj.department.location + '</td>\
+                                <td>\
+                                <button type="button"  class="btn btn-info">查看</button>\
+                                <button type="button" class="btn btn-warning">修改</button>\
+                                <button type="button" class="btn btn-danger">删除</button>\
+                                </td>\
+                              </tr>'
+                    $("#trflag").after(str)
+                }
+
+
+
+            } else {
+                alert(data.msg)
+            }
+
+
+        })
+    })
+</script>
+
+
+</html>

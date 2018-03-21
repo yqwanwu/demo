@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>注册</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/pulic.css">
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+</head>
+<body>
+<form id="registerForm" class="form-horizontal" role="form" action="" method="">
+    <div id="wei">
+        <h2> 注 册 </h2>
+        <div class="form-group" id="q1">
+            <label  class="col-sm-3 control-label" > 用户名：</label>
+            <div class="col-sm-9"style="width: 260px">
+                <input type="text" name="name" class="form-control" placeholder="请输入用户名"  >
+            </div>
+        </div>
+        <div class="form-group"id="q2">
+            <label  class="col-sm-3 control-label">密码：</label>
+            <div class="col-sm-9" style="width: 260px">
+                <input type="text" name="pwd" class="form-control" placeholder="请输入密码" >
+            </div>
+        </div>
+        <div class="form-group" id="q3">
+            <label  class="col-sm-3 control-label">部门名称：</label>
+            <div class="col-sm-6">
+                <select name="department" class="form-control" style=" width: 230px">
+                    <option id="selectItem" value="" selected>--请选择--</option >
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group" id="q4">
+            <label  class="col-sm-3 control-label" > 验证码：</label>
+            <div class="col-sm-5"style="width: 140px">
+                <input type="text" name="code" class="form-control" placeholder="请输入验证码"  >
+            </div>
+            <div class="col-sm-4"style="width: 120px">
+                <!--<input type="text" class="form-control" placeholder="这里替换验证码"  >-->
+                <a href="#" onclick="changeImg()" alt="验证码 点击刷新">
+                    <img id="imgObj"  class="form-control"
+                         src="/login/getCode">
+                </a>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="button" class="btn btn-success" onclick="register()" id="submitForm">注册</button>
+                <button type="reset" class="btn btn-info">重置</button>
+                <button type="button" class="btn btn-info" onclick="checkData()">登录</button>
+                <!--<a href="" class="btn btn-info">登录</a>-->
+                <a href="/emp/listPage" id="forword"></a>
+            </div>
+        </div>
+
+    </div>
+</form>
+
+</body>
+
+<script type="text/javascript">
+    $(function() {
+        //处理部门数据
+        $.post("/dept/all", function (data) {
+            if (data.status == 200) {
+                if (data.data.length == 0) {
+                    alert("无部门数据!")
+                } else {
+                    for (var i = 0; i < data.data.length; ++i) {
+                        var obj = data.data[i]
+                        $("#selectItem").after('<option value ="'
+                            + obj.id + '">'
+                            + obj.name + '</option>');
+                    }
+                }
+            } else {
+                alert(data.msg)
+            }
+        });
+
+    });
+
+    //检测登录数据
+    function checkData() {
+        $.post("/login/checkLoginData",$("#registerForm").serialize(), function(data){
+            if(data.status == 200){
+                document.getElementById("forword").click();
+            } else {
+                alert(data.msg);
+            }
+        });
+
+        return false
+    }
+
+    //注册
+    function register() {
+        $.post("/login/register", $("#registerForm").serialize(), function (data) {
+            alert(data.msg)
+        });
+    }
+
+    function changeImg() {
+        var imgSrc = $("#imgObj");
+        var src = imgSrc.attr("src");
+        imgSrc.attr("src", chgUrl(src));
+    }
+
+    // 时间戳
+    // 为了使每次生成图片不一致，即不让浏览器读缓存，所以需要加上时间戳
+    function chgUrl(url) {
+        var timestamp = (new Date()).valueOf();
+        if ((url.indexOf("&") >= 0)) {
+            url = url + "×tamp=" + timestamp;
+        } else {
+            url = url + "?timestamp=" + timestamp;
+        }
+        return url;
+    }
+</script>
+
+</html>
