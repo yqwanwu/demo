@@ -9,14 +9,11 @@
     <script src="/js/bootstrap.min.js"></script>
 </head>
 <body>
-<h1>欢迎你，<span style="color: red;margin-right: 40px ">XXX</span>今日访问量：33 总访问量：444</h1>
+<h1>欢迎你，<span id="userName" style="color: red;margin-right: 40px "></span>今日访问量：33 总访问量：444</h1>
 <form action="" method="post" >
     <div id="ww" >
         部门名称：<select  style="height:30px">
-                    <option value="">--请选择--</option>
-                    <option value ="">研发部</option>
-                    <option value ="">人事部</option>
-                    <option value="">公关部</option>
+                    <option id="dept_name" value="">--请选择--</option>
                  </select>
         工资：<select  style="height:30px">
                     <option value="">--请选择--</option>
@@ -35,13 +32,11 @@
                     <option value ="">男</option>
                     <option value="">女</option>
             </select>
-        爱好：<select style="height:30px">
-                    <option value ="">---请选择---</option>
-                    <option value="">这里动态查询出来</option>
+        爱好：<select  style="height:30px">
+                    <option id="hoddy" value ="">---请选择---</option>
                </select>
-        部门地点：<select style="height:30px">
-                <option value ="">---请选择---</option>
-                <option value="">这里动态查询出来</option>
+        部门地点：<select  style="height:30px">
+                <option id="dept_location" value ="">---请选择---</option>
              </select>
       姓名：<input type="text" style="height:30px" placeholder="请输入关键字"  autocomplete="off"/>
         <input type="submit" style="height:30px;" class="btn btn-info" value="查询">
@@ -69,29 +64,28 @@
         <td>部门地点</td>
         <td>操作</td>
     </tr>
-    <tr>
-        <td>1</td>
-        <td>员工头像</td>
-        <td>搜索</td>
-        <td>32</td>
-        <td>王者</td>
-        <td>男</td>
-        <td>4543</td>
-        <td>计算机</td>
-        <td>人事部</td>
-        <td>北京</td>
-        <td>
-            <button type="button"  class="btn btn-info">查看</button>
-            <button type="button" class="btn btn-warning">修改</button>
-            <button type="button" class="btn btn-danger">删除</button>
-        </td>
-    </tr>
+    <!--<tr>-->
+        <!--<td>1</td>-->
+        <!--<td>员工头像</td>-->
+        <!--<td>搜索</td>-->
+        <!--<td>32</td>-->
+        <!--<td>王者</td>-->
+        <!--<td>男</td>-->
+        <!--<td>4543</td>-->
+        <!--<td>计算机</td>-->
+        <!--<td>人事部</td>-->
+        <!--<td>北京</td>-->
+        <!--<td>-->
+            <!--<button type="button"  class="btn btn-info">查看</button>-->
+            <!--<button type="button" class="btn btn-warning">修改</button>-->
+            <!--<button type="button" class="btn btn-danger">删除</button>-->
+        <!--</td>-->
+    <!--</tr>-->
 
         <tr>
             <td colspan="13">
                 <form action="" method="post">
-                    共22页 &nbsp;&nbsp;1/22
-                    &nbsp;&nbsp;每页显示3条数据 &nbsp;&nbsp;共66条数量&nbsp;&nbsp;
+                    <span id="pageInfo"></span>
                     <a href="">首页</a>
                     <a href="">上一页</a>
                     <a href="">下一页</a>
@@ -113,11 +107,16 @@
 
 <script type="text/javascript">
     $(function () {
+        //列表数据
         $.post("/emp/list", function (data) {
             if (data.status == 200) {
+                console.log(data.data)
+                var pageText = '共' + data.data.totalPages + '页  ' + (1 + data.data.number) + '/' + data.data.totalPages +
+                      '每页显示' + data.data.size + '条数据  共' + data.data.totalElements + '条数量'
+                $("#pageInfo").text(pageText);
 
-                for (var i = 0; i < data.data.length; ++i) {
-                    var obj = data.data[i]
+                for (var i = 0; i < data.data.content.length; ++i) {
+                    var obj = data.data.content[i]
 
                     var str = '<tr>\
                                 <td>' + obj.id + '</td>\
@@ -131,23 +130,63 @@
                                 <td>' + obj.department.name + '</td>\
                                 <td>' + obj.department.location + '</td>\
                                 <td>\
-                                <button type="button"  class="btn btn-info">查看</button>\
-                                <button type="button" class="btn btn-warning">修改</button>\
-                                <button type="button" class="btn btn-danger">删除</button>\
+                                <a type="button"  class="btn btn-info" href="/emp/viewPage">查看</a>\
+                                <a type="button" class="btn btn-warning" href="/emp/updatePage">修改</a>\
+                                <button value=\"' + obj.id + '\" type="button" class="btn btn-danger" onclick="del(this)">删除</button>\
                                 </td>\
                               </tr>'
                     $("#trflag").after(str)
                 }
-
-
-
             } else {
                 alert(data.msg)
             }
+        });
 
+        //用户数据
+        $.post("/emp/userInfo", function (data) {
+            if (data.status == 200) {
+                $("#userName").text(data.data.uname ? data.data.uname : data.data.name)
+            } else {
+                alert(data.msg);
+            }
+        });
 
-        })
+        //查询下拉列表数据
+        $.post("/emp/getQueryParams", function (data) {
+            if (data.status == 200) {
+                var depts = data.data.dept
+                var hoddys = data.data.emp_hoddy
+
+                for (var i = 0; i < depts.length; ++i) {
+                    var obj = depts[i]
+                    $("#dept_name").after('<option value ="'
+                        + obj.name + '">'
+                        + obj.name + '</option>');
+                    $("#dept_location").after('<option value ="'
+                        + obj.location + '">'
+                        + obj.location + '</option>');
+                }
+
+                for (var i = 0; i < hoddys.length; ++i) {
+                    var obj = hoddys[i]
+                    $("#hoddy").after('<option value ="'
+                        + obj + '">'
+                        + obj + '</option>');
+                }
+            } else {
+                alert(data.msg);
+            }
+        });
     })
+
+
+    //删除数据
+    function del(node) {
+        var id = $(node).val()
+        if(confirm('确定要执行此操作吗?')) {
+
+        }
+    }
 </script>
 
 

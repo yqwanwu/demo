@@ -23,4 +23,16 @@ public interface EmployeeService {
      * @return
      */
     ResultData findAll();
+
+    /**
+     * 分页查询
+     * @return
+     */
+    ResultData findPage();
+
+    /**
+     * 查询列表页面需要的查询条件
+     * @return
+     */
+    ResultData getQueryParams();
 }
