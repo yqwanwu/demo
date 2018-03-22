@@ -1,3 +1,4 @@
+imgHome: /C:/Users/Lenovo/Desktop/temp/
 spring:
   datasource:
     driver-class-name: com.mysql.jdbc.Driver

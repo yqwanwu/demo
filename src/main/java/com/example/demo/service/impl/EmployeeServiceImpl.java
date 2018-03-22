@@ -7,6 +7,7 @@ import com.example.demo.dao.EmployeeDao;
 import com.example.demo.model.Employee;
 import com.example.demo.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -34,6 +35,9 @@ public class EmployeeServiceImpl implements EmployeeService {
     private EmployeeDao employeeDao;
     @Autowired
     private DepartmentDao departmentDao;
+
+    @Value("${imgHome}")
+    private String imgHome;
 
     @Override
     public Employee login(String name, String pwd) {
@@ -123,6 +127,10 @@ public class EmployeeServiceImpl implements EmployeeService {
                 }
             }, pageRequest);
 
+            if (list == null || list.getTotalElements() < 1) {
+                return ResultData.build(9004, "无数据");
+            }
+
             return ResultData.ok(list);
         } catch (Exception e) {
             e.printStackTrace();
@@ -188,7 +196,7 @@ public class EmployeeServiceImpl implements EmployeeService {
             String oldName = uploadFile.getOriginalFilename();
             String name = UUID.randomUUID() + oldName.substring(oldName.lastIndexOf("."));
             String dirStr = new SimpleDateFormat("MM/dd").format(new Date());
-            String fullDir = "/Users/yangqiang/Desktop/tmpDir/test/" + dirStr;
+            String fullDir = imgHome + dirStr;
             File dir = new File(fullDir);
             if (!dir.exists()) {
                 dir.mkdirs();

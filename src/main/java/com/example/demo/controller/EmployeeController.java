@@ -15,6 +15,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 
 @Controller
@@ -77,6 +79,11 @@ public class EmployeeController {
 
         mv.addObject("dept", map.get("dept"));
         mv.addObject("emp_hoddy", map.get("emp_hoddy"));
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String key = sdf.format(new Date());
+        mv.addObject("allCount", LoginController.VISIT_COUNT.get(LoginController.ALLCOUNT_KEY));
+        mv.addObject("todayCount", LoginController.VISIT_COUNT.get(key));
 
         return mv;
     }

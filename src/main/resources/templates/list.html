@@ -9,7 +9,7 @@
     <script src="/js/bootstrap.min.js"></script>
 </head>
 <body>
-<h1>欢迎你，<span id="userName" style="color: red;margin-right: 40px "></span>今日访问量：33 总访问量：444 (登录记一次)</h1>
+<h1>欢迎你，<span id="userName" style="color: red;margin-right: 40px "></span>今日访问量：<span th:text="${todayCount}"></span> 总访问量：<span th:text="${allCount}"></span> (登录记一次)</h1>
 <form action="/emp/listPage" method="post" id="pageFrom">
     <div id="ww" >
         部门名称：<select name="department.name" style="height:30px" >

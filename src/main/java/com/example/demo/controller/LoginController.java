@@ -30,9 +30,10 @@ public class LoginController {
 
     public static final String CODE_KEY = "code";
     public static final String SESSION_USER = "session.user";
+    public static final String ALLCOUNT_KEY = "session.user";
 
     //记录访问数量 没时间用数据库来做了
-    private static ConcurrentHashMap<String, Integer> VISIT_COUNT = new ConcurrentHashMap<>();
+    public static ConcurrentHashMap<String, Integer> VISIT_COUNT = new ConcurrentHashMap<>();
 
     @Autowired
     private EmployeeService employeeService;
@@ -43,15 +44,6 @@ public class LoginController {
      */
     @RequestMapping("")
     public String loginPage() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        String key = sdf.format(new Date());
-
-        if (null == VISIT_COUNT.get(key)) {
-            VISIT_COUNT.put(key, 1);
-        } else {
-            VISIT_COUNT.put(key, ((Integer)VISIT_COUNT.get(key)) + 1);
-        }
-
         return "login";
     }
 
@@ -105,6 +97,19 @@ public class LoginController {
         try {
             Employee employee = employeeService.login(name, pwd);
             request.getSession().setAttribute(LoginController.SESSION_USER, employee);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            String key = sdf.format(new Date());
+            if (null == VISIT_COUNT.get(key)) {
+                VISIT_COUNT.put(key, 1);
+            } else {
+                VISIT_COUNT.put(key, ((Integer)VISIT_COUNT.get(key)) + 1);
+            }
+
+            if (null == VISIT_COUNT.get(ALLCOUNT_KEY)) {
+                VISIT_COUNT.put(ALLCOUNT_KEY, 1);
+            } else {
+                VISIT_COUNT.put(key, ((Integer)VISIT_COUNT.get(ALLCOUNT_KEY)) + 1);
+            }
         } catch (Exception e) {
             return ResultData.build(9000, e.getMessage());
         }
