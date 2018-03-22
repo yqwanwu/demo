@@ -12,7 +12,8 @@ public class PermissionInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
         Object user = httpServletRequest.getSession().getAttribute(LoginController.SESSION_USER);
         if (null == user) {
-            throw new RuntimeException("请先登录系统， 我这没有设置错误页面");
+//            throw new RuntimeException("请先登录系统， 我这没有设置错误页面");
+            httpServletResponse.sendRedirect("/login");
         }
         return null != user;
     }

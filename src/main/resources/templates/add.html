@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head lang="en">
     <meta charset="UTF-8">
     <title>增加</title>
@@ -7,67 +7,68 @@
     <link rel="stylesheet" href="/css/pulic.css">
     <script src="/js/jquery.min.js"></script>
     <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/ajaxfileupload.js"></script>
 </head>
 <body>
-<form class="form-horizontal" role="form"  method="post">
+<form id="updateForm" class="form-horizontal" action="/emp/update" role="form"  method="post">
+    <input type="hidden" name="portrait" id="emp_portrait" >
     <div id="wsx">
-        <h2> 增 加 </h2>
+        <h2> 修 改 信 息 </h2>
         <div class="form-group" id="q11" >
             <label  class="col-sm-3 control-label">头像：</label>
             <div class="col-sm-9"style="width: 260px">
-                <input type="text" class="form-control" value="这里在网上下载上传照片的控件"  >
+                <!--<a href="javascript:void(0)" class="easyui-linkbutton picFileUpload">上传图片</a>-->
+                <!--<input type="hidden" class="form-control" name="image" value="这里在网上下载上传照片的控件"  >-->
+                <div class="box" >
+                    <input type="file" id="uploadInput" name="uploadFile" class="form-controlm upload-file" >
+                    <img alt="" style="width: 20ex; height: 20ex" id="imgFile">
+                </div>
             </div>
+            <button class="col-sm-2" type="button" onclick="return ajaxFileUpload()">上传</button>
         </div>
         <div class="form-group" id="q1" >
             <label  class="col-sm-3 control-label">用户名：</label>
             <div class="col-sm-9"style="width: 260px">
-                <input type="text" class="form-control"  >
+                <input type="text" class="form-control"  name="name" >
             </div>
         </div>
         <div class="form-group" id="q2" >
             <label  class="col-sm-3 control-label">姓名：</label>
             <div class="col-sm-9"style="width: 260px">
-                <input type="text" class="form-control" >
+                <input type="text" class="form-control"  name="uname" >
             </div>
         </div>
         <div class="form-group" id="q3" >
             <label  class="col-sm-3 control-label">生日：</label>
             <div class="col-sm-9"style="width: 260px">
-                <input type="text" class="form-control">
+                <input type="text" class="form-control" name="birthday" placeholder="格式 yyyy-MM-dd"  >
             </div>
         </div>
         <div class="form-group" id="q4" >
             <label  class="col-sm-3 control-label">密码：</label>
             <div class="col-sm-9"style="width: 260px">
-                <input type="text" class="form-control"  >
+                <input type="password" class="form-control" name="pwd">
             </div>
         </div>
         <div class="form-group" id="q5" >
             <label  class="col-sm-3 control-label">工资：</label>
             <div class="col-sm-9"style="width: 260px">
-                <input type="text" class="form-control" >
+                <input type="text" class="form-control" name="wages" >
             </div>
-      </div>
+        </div>
         <div class="form-group" id="q6" >
             <label  class="col-sm-3 control-label">爱好：</label>
             <div class="col-sm-9"style="width: 260px">
-                <input type="text" class="form-control"   >
-            </div>
-        </div>
-        <div class="form-group" id="q7" >
-            <label  class="col-sm-3 control-label">部门地点：</label>
-            <div class="col-sm-9"style="width: 260px">
-                <input type="text" class="form-control"  >
+                <input type="text" class="form-control" name="hobby" >
             </div>
         </div>
 
         <div class="form-group" id="q8" >
             <label  class="col-sm-3 control-label">性别：</label>
             <div class="col-sm-9"style="width: 260px">
-                <select class="form-control"  style="height:35px">
-                    <option value ="">---请选择---</option>
-                    <option value ="">男</option>
-                    <option value="">女</option>
+                <select class="form-control" name="six" style="height:35px">
+                    <option value ="1">男</option>
+                    <option value="2">女</option>
                 </select>
             </div>
         </div>
@@ -75,38 +76,100 @@
         <div class="form-group" id="q9" >
             <label  class="col-sm-3 control-label">级别：</label>
             <div class="col-sm-9"style="width: 260px">
-                <select class="form-control"  style="height:35px">
-                    <option value ="">---请选择---</option>
-                    <option value ="">王者</option>
-                    <option value ="">黄金</option>
-                    <option value="">青铜</option>
-                    <option value="">白银</option>
+                <select class="form-control" name="level" style="height:35px" >
+                    <option value ="4">王者</option>
+                    <option value ="3">黄金</option>
+                    <option value="2">青铜</option>
+                    <option value="1">白银</option>
                 </select>
             </div>
         </div>
         <div class="form-group" id="q10" >
             <label  class="col-sm-3 control-label">部门名称：</label>
             <div class="col-sm-9"style="width: 260px">
-                <select class="form-control"  style="height:35px">
-                    <option value ="">---请选择---</option>
-                    <option value="">--请选择--</option>
-                    <option value ="">研发部</option>
-                    <option value ="">人事部</option>
-                    <option value="">公关部</option>
+                <select class="form-control" name="department" style="height:35px" >
+                    <option th:each="dept : ${depts}" th:value="${dept.id}" th:text="${dept.name}" ></option>
                 </select>
             </div>
         </div>
         <div class="form-group">
             <div class="col-sm-offset-3 col-sm-9">
-                <button  class="btn btn-info"> 修 改 </button>
-                <button  class="btn btn-info"> 返 回 </button>
+                <button type="button" onclick="submitData()" class="btn btn-info"> 添加 </button>
+                <button type="button" class="btn btn-info" onclick="javascript:window.history.go(-1)"> 返 回 </button>
             </div>
         </div>
-
 
     </div>
 </form>
 </body>
+
+<script type="text/javascript">
+    $(function () {
+//        function imgPreview(fileDom,e,ele){
+//            //获取文件
+//            var file = fileDom.files[0];
+//            var supportedTypes = ['image/jpg', 'image/jpeg', 'image/png'];
+//            if(!(supportedTypes.indexOf(file.type)>-1)){
+//                alert('请选择.jpg、.png格式图片')
+//                return;
+//            }
+//            var uploadFiles = e.target.files || e.dataTransfer.files;
+//            console.log(file.type);
+//            var size=uploadFiles.length;
+//            for(var i=0;i<size;i++){
+//                /*读取文件*/
+//                var reader=new FileReader();
+//                reader.readAsDataURL(uploadFiles[i]);
+//                reader.onload=function (e) {
+//                    var imgBase=e.target.result;
+//                    ele.siblings('img').attr('src',imgBase).show()
+//                }
+//            }
+//
+//        }
+//        $('.upload-file').change(function (e) {
+//            imgPreview(this,e,$(this));
+//        })
+    })
+
+    function submitData() {
+        $.post("/emp/save", $("#updateForm").serialize(), function (data) {
+            if (data.status == 200) {
+                alert("添加成功")
+                window.history.go(-1)
+            } else {
+                alert(data.msg)
+            }
+        });
+    }
+
+    /**
+     * 文件上传
+     */
+    function ajaxFileUpload() {
+        $.ajaxFileUpload
+        (
+            {
+                url: '/emp/uploadFile', //用于文件上传的服务器端请求地址
+                secureuri: false, //是否需要安全协议，一般设置为false
+                fileElementId: 'uploadInput', //文件上传域的ID
+                dataType: 'json', //返回值类型 一般设置为json
+                success: function (data, status)  //服务器成功响应处理函数
+                {
+                    $("#imgFile").attr("src", data.data);
+                    $("#emp_portrait").val(data.data)
+
+                },
+                error: function (data, status, e)//服务器响应失败处理函数
+                {
+                    alert(e);
+                }
+            }
+        )
+        return false;
+    }
+</script>
+
 </html>
 
 

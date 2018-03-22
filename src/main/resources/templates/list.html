@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head lang="en">
     <meta charset="UTF-8">
     <title>列表</title>
@@ -9,62 +9,66 @@
     <script src="/js/bootstrap.min.js"></script>
 </head>
 <body>
-<h1>欢迎你，<span id="userName" style="color: red;margin-right: 40px "></span>今日访问量：33 总访问量：444</h1>
-<form action="" method="post" >
+<h1>欢迎你，<span id="userName" style="color: red;margin-right: 40px "></span>今日访问量：33 总访问量：444 (登录记一次)</h1>
+<form action="/emp/listPage" method="post" id="pageFrom">
     <div id="ww" >
-        部门名称：<select  style="height:30px">
+        部门名称：<select name="department.name" style="height:30px" >
                     <option id="dept_name" value="">--请选择--</option>
+                    <option th:each="e : ${dept}" th:value="${e.name}" th:text="${e.name}" th:selected="${e.name == emp.department.name}"></option>
                  </select>
-        工资：<select  style="height:30px">
+                <!--<input type="hidden" name="department.name" id="dept_name_h" th:value="${emp.department.name}">-->
+        工资：<select name="order" style="height:30px">
                     <option value="">--请选择--</option>
-                    <option value ="">升序</option>
-                    <option value="">降序</option>
+                    <option th:selected="${order == 'asc'}" value ="asc">升序</option>
+                    <option th:selected="${order == 'desc'}"value="desc">降序</option>
             </select>
-        级别：<select style="height:30px">
-                    <option value ="">---请选择---</option>
-                    <option value ="">王者</option>
-                    <option value ="">黄金</option>
-                    <option value="">青铜</option>
-                    <option value="">白银</option>
+        级别：<select name="level" style="height:30px">
+                    <option value ="-1">---请选择---</option>
+                    <option th:selected="${emp.level == 4}" value ="4">王者</option>
+                    <option th:selected="${emp.level == 3}" value ="3">黄金</option>
+                    <option th:selected="${emp.level == 2}" value="2">青铜</option>
+                    <option th:selected="${emp.level == 1}" value="1">白银</option>
              </select>
-        性别：<select style="height:30px">
-                    <option value ="">---请选择---</option>
-                    <option value ="">男</option>
-                    <option value="">女</option>
+        性别：<select name="six" style="height:30px">
+                    <option value ="-1">---请选择---</option>
+                    <option th:selected="${emp.six == 1}" value ="1">男</option>
+                    <option th:selected="${emp.six == 2}" value="2">女</option>
             </select>
-        爱好：<select  style="height:30px">
+        爱好：<select  name="hobby" style="height:30px" >
                     <option id="hoddy" value ="">---请选择---</option>
+                    <option th:each="h : ${emp_hoddy}" th:value="${h}" th:text="${h}" th:selected="${h == emp.hobby}"></option>
                </select>
-        部门地点：<select  style="height:30px">
+        <!--<input type="hidden" id="hoddy_h" name="hobby" th:value="${emp.hobby}">-->
+        部门地点：<select name="department.location" style="height:30px" th:value="${emp.department.location}">
                 <option id="dept_location" value ="">---请选择---</option>
+                <option th:each="e : ${dept}" th:value="${e.location}" th:text="${e.location}" th:selected="${e.location == emp.department.location}""></option>
              </select>
-      姓名：<input type="text" style="height:30px" placeholder="请输入关键字"  autocomplete="off"/>
-        <input type="submit" style="height:30px;" class="btn btn-info" value="查询">
-        <button type="button" style="height:30px;" class="btn btn-success">新增</button>
-        <button type="button"  style="height:30px;" class="btn btn-info">导入</button>
-        <button type="button"  style="height:30px;" class="btn btn-info">导出</button>
-        <button type="button" style="height:30px;"  class="btn btn-success">修改密码</button>
-        <button type="button"style="height:30px;" class="btn btn-success">退出</button>
+        <!--<input type="hidden" id="dept_location_h" th:value="${emp.department.location}">-->
+      姓名：<input type="text" name="uname" th:value="${emp.uname}" style="height:30px" placeholder="请输入关键字"  autocomplete="off"/>
+        <input type="button" onclick="return page(4)" style="height:30px;" class="btn btn-info" value="查询">
+        <a href="/emp/addPage" type="button" style="height:30px;" class="btn btn-success">新增</a>
+        <!--<button type="button"  style="height:30px;" class="btn btn-info">导入</button>-->
+        <!--<button type="button"  style="height:30px;" class="btn btn-info">导出</button>-->
+        <a id="modifyPwd" type="button" style="height:30px;"  class="btn btn-success">修改密码</a>
+        <a type="button" onclick="return logout()" href="#" style="height:30px;" class="btn btn-success">退出</a>
     </div>
-</form>
 
+    <table class="table table-bordered" id="ss" >
 
-<table class="table table-bordered" id="ss" >
-
-    <tr id="trflag">
-        <td>员工编号</td>
-        <td>员工头像</td>
-        <td>员工姓名</td>
-        <td>员工年龄</td>
-        <td>员工级别</td>
-        <td>员工性别</td>
-        <td>员工工资</td>
-        <td>员工爱好</td>
-        <td>部门名称</td>
-        <td>部门地点</td>
-        <td>操作</td>
-    </tr>
-    <!--<tr>-->
+        <tr id="trflag">
+            <td>员工编号</td>
+            <td>员工头像</td>
+            <td>员工姓名</td>
+            <td>员工年龄</td>
+            <td>员工级别</td>
+            <td>员工性别</td>
+            <td>员工工资</td>
+            <td>员工爱好</td>
+            <td>部门名称</td>
+            <td>部门地点</td>
+            <td>操作</td>
+        </tr>
+        <!--<tr>-->
         <!--<td>1</td>-->
         <!--<td>员工头像</td>-->
         <!--<td>搜索</td>-->
@@ -76,43 +80,78 @@
         <!--<td>人事部</td>-->
         <!--<td>北京</td>-->
         <!--<td>-->
-            <!--<button type="button"  class="btn btn-info">查看</button>-->
-            <!--<button type="button" class="btn btn-warning">修改</button>-->
-            <!--<button type="button" class="btn btn-danger">删除</button>-->
+        <!--<button type="button"  class="btn btn-info">查看</button>-->
+        <!--<button type="button" class="btn btn-warning">修改</button>-->
+        <!--<button type="button" class="btn btn-danger">删除</button>-->
         <!--</td>-->
-    <!--</tr>-->
+        <!--</tr>-->
 
         <tr>
             <td colspan="13">
-                <form action="" method="post">
+                <!--<form id="pageFrom" action="/emp/listPage" method="post">-->
                     <span id="pageInfo"></span>
-                    <a href="">首页</a>
-                    <a href="">上一页</a>
-                    <a href="">下一页</a>
-                    <a href="">尾页</a>
-                    跳转到第<input type="text"  style="height:30px;" placeholder="请输入页数">页
-                    <input type="submit" class="btn btn-primary" style="height:30px; " value="跳转">
-                    每页显示： <select style="height:30px">
-                                    <option value="1">1</option>
-                                    <option value="3">3</option>
-                                    <option value="5">5</option>
-                                    <option value="9" >9</option>
-                              </select>
-                </form>
+                    <a href="#" onclick="return page(0)">首页</a>
+                    <a href="#" onclick="return page(1)">上一页</a>
+                    <a href="#" onclick="return page(2)">下一页</a>
+                    <a href="#" onclick="return page(3)">尾页</a>
+                    跳转到第<input th:value="${pageNo}" type="text" id="pageNo" name="pageNo" style="height:30px;" placeholder="请输入页数">页
+                    <input onclick="return page(0)" type="button" class="btn btn-primary" style="height:30px; " value="跳转">
+                    每页显示： <select id="pageSize" onselect="" name="pageSize" style="height:30px" onchange="return page(4)">
+                    <option value="1" th:selected="${pageSize == 1}">1</option>
+                    <option value="3" th:selected="${pageSize == 3}">3</option>
+                    <option value="5" th:selected="${pageSize == 5}">5</option>
+                    <option value="9" th:selected="${pageSize == 9}">9</option>
+                </select>
+                <!--</form>-->
             </td>
         </tr>
 
-</table>
+    </table>
+</form>
+
+
+
 </body>
 
 <script type="text/javascript">
+    var totalPage = 1
+    var currentPage = 1
+    var allCount = 0
     $(function () {
-        //列表数据
-        $.post("/emp/list", function (data) {
+        //用户数据
+        $.post("/emp/userInfo", function (data) {
             if (data.status == 200) {
-                console.log(data.data)
+                $("#userName").text(data.data.uname ? data.data.uname : data.data.name)
+                $("#modifyPwd").attr("href", "/emp/mimaPage?id=" + data.data.id)
+                getList()
+                getParams()
+            } else {
+//                alert(data.msg);
+            }
+        });
+
+
+    })
+
+    //列表数据
+    function getList() {
+        var queryData = {}
+//        var pn = parseInt($("#pageNo").val())
+//        if (pn > )
+//        queryData.pageNo = $("#pageNo").val()
+//        queryData.pageSize = $("#pageSize").val()
+
+        console.log($("#pageFrom").serialize())
+
+        $.post("/emp/list", $("#pageFrom").serialize(), function (data) {
+            if (data.status == 200) {
+                $("#pageNo").val(1 + data.data.number);
+                totalPage = data.data.totalPages
+                currentPage = 1 + data.data.number
+                allCount = data.data.totalElements
+
                 var pageText = '共' + data.data.totalPages + '页  ' + (1 + data.data.number) + '/' + data.data.totalPages +
-                      '每页显示' + data.data.size + '条数据  共' + data.data.totalElements + '条数量'
+                    '每页显示' + data.data.size + '条数据  共' + data.data.totalElements + '条数量'
                 $("#pageInfo").text(pageText);
 
                 for (var i = 0; i < data.data.content.length; ++i) {
@@ -130,8 +169,8 @@
                                 <td>' + obj.department.name + '</td>\
                                 <td>' + obj.department.location + '</td>\
                                 <td>\
-                                <a type="button"  class="btn btn-info" href="/emp/viewPage">查看</a>\
-                                <a type="button" class="btn btn-warning" href="/emp/updatePage">修改</a>\
+                                <a type="button" class="btn btn-info" href="/emp/viewPage?id=' + obj.id + '">查看</a>\
+                                <a type="button" class="btn btn-warning" href="/emp/updatePage?id=' + obj.id + '">修改</a>\
                                 <button value=\"' + obj.id + '\" type="button" class="btn btn-danger" onclick="del(this)">删除</button>\
                                 </td>\
                               </tr>'
@@ -141,51 +180,95 @@
                 alert(data.msg)
             }
         });
+    }
 
-        //用户数据
-        $.post("/emp/userInfo", function (data) {
-            if (data.status == 200) {
-                $("#userName").text(data.data.uname ? data.data.uname : data.data.name)
-            } else {
-                alert(data.msg);
+    //查询下拉列表数据
+    function getParams() {
+//        $.post("/emp/getQueryParams", function (data) {
+//            if (data.status == 200) {
+//                var depts = data.data.dept
+//                var hoddys = data.data.emp_hoddy
+//
+//                for (var i = 0; i < depts.length; ++i) {
+//                    var obj = depts[i]
+//                    var nameh = $("#dept_name_h").val()
+//                    var localh = $("#dept_location_h").val()
+//                    $("#dept_name").after('<option value ="'
+//                        + obj.name + '"  ' + (nameh == obj.name ? 'selected="selected"' : '') + '>'
+//                        + obj.name + '</option>');
+//                    $("#dept_location").after('<option value ="'
+//                        + obj.location + '" ' + (localh == obj.location ? 'selected="selected"' : '') + '>'
+//                        + obj.location + '</option>');
+//                }
+//
+//                for (var i = 0; i < hoddys.length; ++i) {
+//                    var obj = hoddys[i]
+//                    var hoddyh = $("#hoddy_h").val()
+//                    $("#hoddy").after('<option value ="'
+//                        + obj + '" '+ (hoddyh == obj ? 'selected="selected"' : '') + '>'
+//                        + obj + '</option>');
+//                }
+//            } else {
+//                alert(data.msg);
+//            }
+//        });
+    }
+
+    //分页请求
+    function page(type) {
+        var pageNo = parseInt($("#pageNo").val())
+
+        if (isNaN(pageNo)) {
+            alert("非法输入！！")
+            $("#pageNo").val(currentPage)
+            return false
+        }
+
+        var size = parseInt($("#pageSize").val())
+
+        if (type == 0) {
+            pageNo = 1
+        } else if (type == 1) {
+            pageNo = pageNo - 1 < 1 ? 1 : pageNo - 1
+        } else if (type == 2) {
+            pageNo = pageNo + 1 > totalPage ? totalPage : pageNo + 1
+        } else if (type == 3) {
+            pageNo = totalPage
+        } else if (type == 4) {
+            if (pageNo < 1) {
+                pageNo = 1
+            } else if (pageNo > totalPage || pageNo * size >= allCount) {
+                pageNo = parseInt((allCount + size - 1) / size)
             }
-        });
+        }
 
-        //查询下拉列表数据
-        $.post("/emp/getQueryParams", function (data) {
-            if (data.status == 200) {
-                var depts = data.data.dept
-                var hoddys = data.data.emp_hoddy
-
-                for (var i = 0; i < depts.length; ++i) {
-                    var obj = depts[i]
-                    $("#dept_name").after('<option value ="'
-                        + obj.name + '">'
-                        + obj.name + '</option>');
-                    $("#dept_location").after('<option value ="'
-                        + obj.location + '">'
-                        + obj.location + '</option>');
-                }
-
-                for (var i = 0; i < hoddys.length; ++i) {
-                    var obj = hoddys[i]
-                    $("#hoddy").after('<option value ="'
-                        + obj + '">'
-                        + obj + '</option>');
-                }
-            } else {
-                alert(data.msg);
-            }
-        });
-    })
-
+        $("#pageNo").val(pageNo)
+        $("#pageFrom").submit()
+    }
 
     //删除数据
     function del(node) {
         var id = $(node).val()
         if(confirm('确定要执行此操作吗?')) {
-
+            $.post("/emp/delete", {id:id}, function (data) {
+              if (data.status == 200) {
+                  location.reload();
+              } else {
+                  alert(data.msg)
+              }
+            })
         }
+    }
+    
+    function logout() {
+        if (confirm('是否要退出！')) {
+            $.post("/login/logout", function (data) {
+                window.location.href = document.referrer;
+                window.history.back(-1);
+                window.location.href = "/login"
+            })
+        }
+        return false
     }
 </script>
 

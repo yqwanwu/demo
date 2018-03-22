@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head lang="en">
     <meta charset="UTF-8">
     <title>修改密码</title>
@@ -9,36 +9,37 @@
     <script src="/js/bootstrap.min.js"></script>
 </head>
 <body>
-<form class="form-horizontal" role="form"  method="post">
+<form id="pwdFrom" class="form-horizontal" role="form"  method="post">
+    <input type="hidden" name="id" th:value="${emp.id}">
     <div id="wei">
         <h2>修改密码</h2>
         <div class="form-group" id="q1" >
             <label  class="col-sm-3 control-label">账号：</label>
             <div class="col-sm-9"style="width: 260px">
-                <input type="text" class="form-control"  disabled="true">
+                <input type="text" class="form-control" th:value="${emp.name}" disabled="true">
             </div>
         </div>
         <div class="form-group"id="q2">
             <label  class="col-sm-3 control-label">旧密码：</label>
             <div class="col-sm-9" style="width: 260px">
-                <input type="text"  class="form-control" placeholder="请输入旧密码">
+                <input id="oldPwd" type="password" name="oldPwd" class="form-control" placeholder="请输入旧密码">
             </div>
         </div>
         <div class="form-group"id="q3">
             <label  class="col-sm-3 control-label">新密码：</label>
             <div class="col-sm-9" style="width: 260px">
-                <input type="text" class="form-control"  placeholder="请输入新密码">
+                <input id="newPwd" name="pwd" type="password" class="form-control"  placeholder="请输入新密码">
             </div>
         </div>
         <div class="form-group"id="q4">
             <label  class="col-sm-3 control-label">确认密码：</label>
             <div class="col-sm-9" style="width: 260px">
-                <input type="text" class="form-control"  placeholder="请输入确认密码">
+                <input id="newPwd1" type="password" class="form-control"  placeholder="请输入确认密码">
             </div>
         </div>
         <div class="form-group">
             <div class="col-sm-offset-3 col-sm-9">
-                <button type="button"  class="btn btn-success"> 修 改 </button>
+                <button onclick="submitForm()" type="button"  class="btn btn-success"> 修 改 </button>
                 <button type="reset" class="btn btn-info"> 重 置 </button>
                 <button  class="btn btn-info"> 返 回 </button>
             </div>
@@ -46,4 +47,27 @@
     </div>
 </form>
 </body>
+
+<script type="text/javascript">
+    function submitForm() {
+        if (confirm('确定要执行此操作吗?')) {
+            if ($("#newPwd").val() != $("#newPwd1").val()) {
+                alert("两次密码不一致")
+                return
+            } else {
+                $.post("/emp/modifyPwd", $("#pwdFrom").serialize(), function (data) {
+                    if (data.status == 200) {
+                        alert("修改成功")
+                        window.history.go(-1)
+                    } else {
+                        alert(data.msg)
+                    }
+                })
+            }
+        }
+
+    }
+</script>
+
+
 </html>

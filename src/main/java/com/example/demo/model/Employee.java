@@ -1,5 +1,7 @@
 package com.example.demo.model;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -42,6 +44,7 @@ public class Employee {
     /**
      * 员工生日
      */
+    @DateTimeFormat(pattern="yyyy-MM-dd")
     @Column(name = "e_birthday")
     private Date birthday;
 

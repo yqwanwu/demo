@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head lang="en">
     <meta charset="UTF-8">
     <title>查看信息</title>
@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="/css/pulic.css">
     <script src="/js/jquery.min.js"></script>
     <script src="/js/bootstrap.min.js"></script>
+
 </head>
 <body>
 <form class="form-horizontal" role="form"  method="post">
@@ -15,49 +16,53 @@
         <div class="form-group" id="q11" >
             <label  class="col-sm-3 control-label">头像：</label>
             <div class="col-sm-9"style="width: 260px">
-                <input type="text" class="form-control" value="这里在网上下载上传照片的控件"  >
+                <!--<input type="text" class="form-control" value="这里在网上下载上传照片的控件"  >-->
+                <div class="box" >
+                    <!--<input type="file" class="form-controlm upload-file" name="headImg" >-->
+                    <img th:src="${emp.portrait}" alt="" style="width: 20ex; height: 20ex" id="imgFile">
+                </div>
             </div>
         </div>
         <div class="form-group" id="q1" >
             <label  class="col-sm-3 control-label">用户名：</label>
             <div class="col-sm-9"style="width: 260px">
-                <input type="text" class="form-control"  disabled="true"  value="1">
+                <input type="text" class="form-control"  disabled="true"  th:value="${emp.name}">
             </div>
         </div>
         <div class="form-group" id="q2" >
             <label  class="col-sm-3 control-label">姓名：</label>
             <div class="col-sm-9"style="width: 260px">
-                <input type="text" class="form-control"  disabled="true"  value="1">
+                <input type="text" class="form-control"  disabled="true"  th:value="${emp.uname}">
             </div>
         </div>
         <div class="form-group" id="q3" >
             <label  class="col-sm-3 control-label">生日：</label>
             <div class="col-sm-9"style="width: 260px">
-                <input type="text" class="form-control"  disabled="true"  value="1">
+                <input type="text" class="form-control"  disabled="true"  th:value="${emp.birthday == null ? '' : #dates.format(emp.birthday, 'yyyy-MM-dd')}">
             </div>
         </div>
         <div class="form-group" id="q4" >
             <label  class="col-sm-3 control-label">密码：</label>
             <div class="col-sm-9"style="width: 260px">
-                <input type="text" class="form-control"  disabled="true"  value="1">
+                <input type="text" class="form-control"  disabled="true"  th:value="${emp.pwd}">
             </div>
         </div>
         <div class="form-group" id="q5" >
             <label  class="col-sm-3 control-label">工资：</label>
             <div class="col-sm-9"style="width: 260px">
-                <input type="text" class="form-control"  disabled="true"  value="1">
+                <input type="text" class="form-control"  disabled="true"  th:value="${emp.wages}">
             </div>
       </div>
         <div class="form-group" id="q6" >
             <label  class="col-sm-3 control-label">爱好：</label>
             <div class="col-sm-9"style="width: 260px">
-                <input type="text" class="form-control"  disabled="true"  value="1">
+                <input type="text" class="form-control"  disabled="true"  th:value="${emp.hobby}">
             </div>
         </div>
         <div class="form-group" id="q7" >
             <label  class="col-sm-3 control-label">部门地点：</label>
             <div class="col-sm-9"style="width: 260px">
-                <input type="text" class="form-control"  disabled="true"  value="1">
+                <input type="text" class="form-control"  disabled="true"  th:value="${emp.department.location}">
             </div>
         </div>
 
@@ -65,9 +70,9 @@
             <label  class="col-sm-3 control-label">性别：</label>
             <div class="col-sm-9"style="width: 260px">
                 <select class="form-control"  style="height:35px">
-                    <option value ="">---请选择---</option>
-                    <option value ="">男</option>
-                    <option value="">女</option>
+                    <option  value ="">---请选择---</option>
+                    <option th:selected="${emp.six == 1}" value ="1">男</option>
+                    <option th:selected="${emp.six == 2}" value="2">女</option>
                 </select>
             </div>
         </div>
@@ -75,24 +80,21 @@
         <div class="form-group" id="q9" >
             <label  class="col-sm-3 control-label">级别：</label>
             <div class="col-sm-9"style="width: 260px">
-                <select class="form-control"  style="height:35px">
+                <select class="form-control"  style="height:35px" >
                     <option value ="">---请选择---</option>
-                    <option value ="">王者</option>
-                    <option value ="">黄金</option>
-                    <option value="">青铜</option>
-                    <option value="">白银</option>
+                    <option th:selected="${emp.level == 4}" value ="">王者</option>
+                    <option th:selected="${emp.level == 3}" value ="">黄金</option>
+                    <option th:selected="${emp.level == 2}" value="">青铜</option>
+                    <option th:selected="${emp.level == 1}" value="">白银</option>
                 </select>
             </div>
         </div>
         <div class="form-group" id="q10" >
             <label  class="col-sm-3 control-label">部门名称：</label>
             <div class="col-sm-9"style="width: 260px">
-                <select class="form-control"  style="height:35px">
+                <select class="form-control"  style="height:35px" >
                     <option value ="">---请选择---</option>
-                    <option value="">--请选择--</option>
-                    <option value ="">研发部</option>
-                    <option value ="">人事部</option>
-                    <option value="">公关部</option>
+                    <option th:each="dept : ${depts}" th:text="${dept.name}" th:selected="${dept.id == emp.department.id}"></option>
                 </select>
             </div>
         </div>
@@ -101,11 +103,17 @@
                 <button  class="btn btn-info" type="button" onclick="javascript:window.history.go(-1)"> 返 回 </button>
             </div>
         </div>
-
-
     </div>
+    <input type="hidden" id="empId" th:value="${empId}">
 </form>
 </body>
+
+<script type="text/javascript">
+    $(function () {
+
+    });
+</script>
+
 </html>
 
 

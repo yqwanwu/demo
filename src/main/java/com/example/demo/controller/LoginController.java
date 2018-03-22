@@ -16,7 +16,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.awt.image.RenderedImage;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 登录控制器
@@ -28,6 +31,9 @@ public class LoginController {
     public static final String CODE_KEY = "code";
     public static final String SESSION_USER = "session.user";
 
+    //记录访问数量 没时间用数据库来做了
+    private static ConcurrentHashMap<String, Integer> VISIT_COUNT = new ConcurrentHashMap<>();
+
     @Autowired
     private EmployeeService employeeService;
 
@@ -37,6 +43,15 @@ public class LoginController {
      */
     @RequestMapping("")
     public String loginPage() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String key = sdf.format(new Date());
+
+        if (null == VISIT_COUNT.get(key)) {
+            VISIT_COUNT.put(key, 1);
+        } else {
+            VISIT_COUNT.put(key, ((Integer)VISIT_COUNT.get(key)) + 1);
+        }
+
         return "login";
     }
 
@@ -128,6 +143,17 @@ public class LoginController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * 退出登录
+     * @return
+     */
+    @RequestMapping("/logout")
+    @ResponseBody
+    public ResultData logout(HttpServletRequest request) {
+        request.getSession().removeAttribute(LoginController.SESSION_USER);
+        return ResultData.ok();
     }
 
 }
